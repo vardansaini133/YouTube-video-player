@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Video Player</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0f0f0f;
+            color: #f1f1f1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1750px;
+            width: 100%;
+            padding: 24px;
+            gap: 24px;
+        }
+
+        /* Main Content Column */
+        .primary-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* Video Player Wrapper */
+        .player-wrapper {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background-color: #000;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .player-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Video Info */
+        .video-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-top: 12px;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .channel-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .channel-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #333;
+        }
+
+        .channel-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .channel-name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .sub-count {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        .subscribe-btn {
+            background-color: #f1f1f1;
+            color: #0f0f0f;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 18px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-left: 12px;
+        }
+
+        .subscribe-btn:hover {
+            background-color: #d9d9d9;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn {
+            background-color: #272727;
+            color: #f1f1f1;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 18px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            background-color: #3f3f3f;
+        }
+
+        /* Description Box */
+        .description-box {
+            background-color: #272727;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .description-meta {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #f1f1f1;
+        }
+
+        .description-meta span {
+            margin-right: 8px;
+        }
+
+        /* Secondary Content Column (Sidebar) */
+        .secondary-content {
+            width: 402px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .related-card {
+            display: flex;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .thumbnail-wrapper {
+            position: relative;
+            width: 168px;
+            height: 94px;
+            flex-shrink: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #272727;
+        }
+
+        .thumbnail-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .duration-badge {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            font-size: 0.75rem;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .related-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .related-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .related-meta {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        /* Responsive Layout */
+        @media (max-width: 1000px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .secondary-content {
+                width: 100%;
+            }
+
+            .related-card {
+                gap: 12px;
+            }
+
+            .thumbnail-wrapper {
+                width: 160px;
+                height: 90px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Main Video Section -->
+        <main class="primary-content">
+            <!-- Responsive Iframe Wrapper -->
+            <div class="player-wrapper">
+                <iframe 
+                    src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0" 
+                    title="YouTube video player" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+
+            <!-- Video Title -->
+            <h1 class="video-title">Rick Astley - Never Gonna Give You Up (Official Music Video)</h1>
+
+            <!-- Channel & Action Bar -->
+            <div class="channel-row">
+                <div class="channel-info">
+                    <img class="avatar" src="https://picsum.photos/40/40?random=10" alt="Channel Avatar">
+                    <div class="channel-details">
+                        <span class="channel-name">Rick Astley</span>
+                        <span class="sub-count">14.2M subscribers</span>
+                    </div>
+                    <button class="subscribe-btn">Subscribe</button>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn">👍 16M</button>
+                    <button class="btn">👎</button>
+                    <button class="btn">↗ Share</button>
+                    <button class="btn">⬇ Download</button>
+                    <button class="btn">⋯</button>
+                </div>
+            </div>
+
+            <!-- Description Box -->
+            <div class="description-box">
+                <div class="description-meta">
+                    <span>1.5B views</span>
+                    <span>14 years ago</span>
+                </div>
+                <p>The official video for "Never Gonna Give You Up" by Rick Astley.</p>
+                <p>Taken from the album 'Whenever You Need Somebody' - deluxe 2CD and digital deluxe out now!</p>
+            </div>
+        </main>
+
+        <!-- Sidebar / Recommended Videos -->
+        <aside class="secondary-content">
+            
+            <div class="related-card">
+                <div class="thumbnail-wrapper">
+                    <img src="https://picsum.photos/168/94?random=1" alt="Thumbnail">
+                    <span class="duration-badge">3:45</span>
+                </div>
+                <div class="related-info">
+                    <div class="related-title">Top 10 Web Development Trends in 2026</div>
+                    <div class="related-meta">Code Channel</div>
+                    <div class="related-meta">240K views • 2 weeks ago</div>
+                </div>
+            </div>
+
+            <div class="related-card">
+                <div class="thumbnail-wrapper">
+                    <img src="https://picsum.photos/168/94?random=2" alt="Thumbnail">
+                    <span class="duration-badge">12:10</span>
+                </div>
+                <div class="related-info">
+                    <div class="related-title">Learn Modern HTML & CSS - Full Course</div>
+                    <div class="related-meta">Tech Academy</div>
+                    <div class="related-meta">1.2M views • 5 months ago</div>
+                </div>
+            </div>
+
+            <div class="related-card">
+                <div class="thumbnail-wrapper">
+                    <img src="https://picsum.photos/168/94?random=3" alt="Thumbnail">
+                    <span class="duration-badge">8:22</span>
+                </div>
+                <div class="related-info">
+                    <div class="related-title">How Responsive Web Design Works</div>
+                    <div class="related-meta">Design Central</div>
+                    <div class="related-meta">85K views • 3 days ago</div>
+                </div>
+            </div>
+
+            <div class="related-card">
+                <div class="thumbnail-wrapper">
+                    <img src="https://picsum.photos/168/94?random=4" alt="Thumbnail">
+                    <span class="duration-badge">15:40</span>
+                </div>
+                <div class="related-info">
+                    <div class="related-title">JavaScript Essentials for Beginners</div>
+                    <div class="related-meta">JS Ninja</div>
+                    <div class="related-meta">500K views • 1 year ago</div>
+                </div>
+            </div>
+
+        </aside>
+    </div>
+
+</body>
+</html>
